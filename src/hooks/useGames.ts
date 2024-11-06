@@ -13,17 +13,18 @@ export interface Platfrom {
 export interface Game {
   id: number;
   name: string;
+  slug: string;
+  description_raw: string;
   background_image: string;
   parent_platforms: { platform: Platfrom }[];
   metacritic: number;
   rating_top: number;
 }
 
-const useGames = () =>{
+const useGames = () => {
+  const gameQuery = useGameQueryStore((s) => s.gameQuery);
 
-  const gameQuery = useGameQueryStore(s=> s.gameQuery)
-
-   return useInfiniteQuery<FetchResponse<Game>, Error>({
+  return useInfiniteQuery<FetchResponse<Game>, Error>({
     queryKey: ["games", gameQuery],
     queryFn: ({ pageParam = 1 }) =>
       apiClient.getAll({
@@ -40,7 +41,6 @@ const useGames = () =>{
     },
     staleTime: 24 * 60 * 60 * 1000,
   });
-}
-  
+};
 
 export default useGames;
